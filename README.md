@@ -3,4 +3,4 @@ SMKCycle_JS
 
 ---
 
-![image](https://github.com/lovemo/SMKCycle_JS/blob/master/demo.gif)
+![image](https://github.com/lovemo/SMKCycle_JS/blob/master/demo.gif width="70%")
