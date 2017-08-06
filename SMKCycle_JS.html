@@ -13,7 +13,7 @@
         li.on {background: #c30;}
     </style>
 </head>
-<script src="./jquery-1.11.3.js">
+<script src="./js/jquery-1.11.3.js">
     
 </script>
 <body>
@@ -115,7 +115,7 @@
                     nextSection--;
                 }
                 var next_num = nextSection * per_row + nextItem;
-                $(canvas).animate({left: -screen_width * next_num  + 'px'}, animate_duration, function(){
+                $('#canvas').animate({left: -screen_width * next_num  + 'px'}, animate_duration, function(){
                     $('li').removeClass();
                     $('li').eq(nextItem).addClass('on');
                     start_cycle();
@@ -141,7 +141,7 @@
                     nextSection++;
                 }
                 var next_num = nextSection * per_row + nextItem;
-                $(canvas).animate({left: -screen_width * next_num  + 'px'}, animate_duration, function(){
+                $('#canvas').animate({left: -screen_width * next_num  + 'px'}, animate_duration, function(){
                     $('li').removeClass();
                     $('li').eq(nextItem).addClass('on');
                     start_cycle();
