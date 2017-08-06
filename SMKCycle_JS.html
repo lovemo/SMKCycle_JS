@@ -5,9 +5,6 @@
     <title>Document</title>
     <style>
         *{margin: 0; padding: 0;}
-        #box {margin: 50px auto 0; position: relative;}
-        #canvas {position: absolute; left: 0; top: 0;}
-        #canvas a {float: left;}
         ul {position: absolute; bottom: 10px; width: 100%; text-align: center;}
         ul li {display: inline-block; list-style: none; width:20px; height: 20px; border-radius: 10px; background: #999; color: #fff; font-weight: bold;font-size: 14px; text-align: center;line-height: 20px;}
         li.on {background: #c30;}
@@ -65,9 +62,9 @@
             })
 
             // 绑定样式
-            $('#box').css({"width" : screen_width + 'px', "height" : '454px'})
-            $('#canvas').css({"width" : screen_width * per_row * per_section + 'px', "height" : '454px'})
-            $('#canvas a').css({"width" : screen_width + 'px', "height" : '454px'})
+            $('#box').css({"width" : screen_width + 'px', "height" : '454px','margin': '50px auto 0', 'position': 'relative'})
+            $('#canvas').css({"width" : screen_width * per_row * per_section + 'px', "height" : '454px','position': 'absolute', 'left': '0', 'top': '0'})
+            $('#canvas a').css({"width" : screen_width + 'px', "height" : '454px','float': 'left'})
             $('#canvas img').css({"width" : screen_width + 'px', "height" : '454px'})
 
     
