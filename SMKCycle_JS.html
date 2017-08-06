@@ -154,7 +154,7 @@
                 var row = indexPath.row;
                 var section = Math.floor(per_section / 2)
                 var num = section * per_row + row;
-                $(canvas).animate({left: -screen_width * num + 'px'}, 0);
+                $('#canvas').animate({left: -screen_width * num + 'px'}, 0);
             }
 
      })
