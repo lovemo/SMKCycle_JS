@@ -35,7 +35,7 @@
             //定时器
             var timer; 
             // 动画时长
-            var timer_duration = 3000;
+            var timer_duration = 2000;
             var animate_duration = 900;
             // 几组
             var per_section = 3; 
@@ -78,6 +78,7 @@
             start_cycle();
         
             function start_cycle(){
+           
                 timer = setInterval(function(){
                     next_page();
                 },timer_duration);
@@ -86,7 +87,7 @@
             // 绑定事件
             $("img").bind({
                 click:function(){},
-                mouseover:function(){clearInterval(timer);},  
+                mouseover:function(){clearInterval(timer); timer=null;},  
                 mouseout:function(){start_cycle();}  
             });
             $('#pre').click(function(){
@@ -100,6 +101,7 @@
             // 上一页
             function pre_page() {
                 clearInterval(timer);
+                timer = null;
                 // 重置位置
                 reset_page();
                 // 下一个需要展示的位置
@@ -108,25 +110,25 @@
                 var nextItem = indexPath.row - 1;
                 var nextSection = indexPath.section;
                 if (nextItem < 0 ) {
-                    nextItem = 2;
+                    nextItem = per_row - 1;
                     nextSection--;
                 }
                 var next_num = nextSection * per_row + nextItem;
-                $('#canvas').animate({left: -screen_width * next_num  + 'px'}, animate_duration, function(){
+                $('#canvas').stop().animate({left: -screen_width * next_num  + 'px'}, animate_duration);
                     $('li').removeClass();
                     $('li').eq(nextItem).addClass('on');
                     start_cycle();
                     indexPath.row --;
                     if (indexPath.row < 0 ) {
-                        indexPath.row = 2;
+                        indexPath.row = per_row - 1;
                     }
-                    indexPath.row %= 3;
-                });
+                    indexPath.row %= per_row;
             }
 
             // 下一页
             function next_page(){
-                clearInterval(timer);   
+                clearInterval(timer); 
+                timer = null;  
                 // 重置位置
                 reset_page();
 
@@ -138,13 +140,12 @@
                     nextSection++;
                 }
                 var next_num = nextSection * per_row + nextItem;
-                $('#canvas').animate({left: -screen_width * next_num  + 'px'}, animate_duration, function(){
+                $('#canvas').stop().animate({left: -screen_width * next_num  + 'px'}, animate_duration);
                     $('li').removeClass();
                     $('li').eq(nextItem).addClass('on');
                     start_cycle();
                     indexPath.row ++;
-                    indexPath.row %= 3;
-                });
+                    indexPath.row %= per_row;
     
             }
 
@@ -154,7 +155,7 @@
                 var row = indexPath.row;
                 var section = Math.floor(per_section / 2)
                 var num = section * per_row + row;
-                $('#canvas').animate({left: -screen_width * num + 'px'}, 0);
+                $('#canvas').stop().animate({left: -screen_width * num + 'px'}, 0);
             }
 
      })
