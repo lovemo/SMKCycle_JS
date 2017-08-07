@@ -53,16 +53,23 @@
 
 
             // 生成图片数组
-            var imgs_array = [];
-            $.each(imgs,function(){
-                imgs_array = imgs_array.concat(imgs);
+            var first_section = []
+            $.each(imgs, function(k,v){
+                first_section[k] = ((k == imgs.length - 1) ? v : "")
             })
+            var last_section = []
+            $.each(imgs, function(k,v){
+                last_section[k] = ((k == 0) ? v : "")
+            })
+            var imgs_array = [];
+            imgs_array = imgs_array.concat(first_section).concat(imgs).concat(last_section);
+            
             $.each(imgs_array, function(k,v){
                 $('#canvas').append('<a href=""><img src="'+ v +'" alt=""></a>')
             })
 
             // 绑定样式
-            $('#box').css({"width" : screen_width + 'px', "height" : '454px','margin': '50px auto 0', 'position': 'relative'})
+            $('#box').css({"width" : screen_width + 'px', "height" : '454px','margin': '50px auto 0', 'position': 'relative', 'overflow':'hidden'})
             $('#canvas').css({"width" : screen_width * per_row * per_section + 'px', "height" : '454px','position': 'absolute', 'left': '0', 'top': '0'})
             $('#canvas a').css({"width" : screen_width + 'px', "height" : '454px','float': 'left'})
             $('#canvas img').css({"width" : screen_width + 'px', "height" : '454px'})
