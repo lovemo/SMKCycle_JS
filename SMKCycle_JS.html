@@ -41,7 +41,7 @@
             
             // 生成图片数组
             var imgs_array = SMKCycleUtil.getArray(imgs);
-            console.log(imgs_array);
+
             $.each(imgs_array, function(k,v){
                 $('#canvas').append('<a href=""><img src="'+ v +'" alt=""></a>')
             })
@@ -79,7 +79,6 @@
             $("li").bind({
                 click:function(){
                     cycle.setPage($("li").index(this),function(index){
-                        console.log(index);
                         changeLi(index);
                     });
                 },
