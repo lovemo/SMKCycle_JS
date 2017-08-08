@@ -10,9 +10,8 @@
         li.on {background: #c30;}
     </style>
 </head>
-<script src="./js/jquery-1.11.3.js">
-    
-</script>
+<script src="./js/jquery-1.11.3.js"></script>
+<script src="./js/SMKCycle.js"></script>
 <body>
     <div id="box">
         <div id="canvas">
@@ -21,6 +20,9 @@
             <li class="on">1</li>
             <li>2</li>
             <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li> 
         </ul>
 
     </div>   
@@ -28,141 +30,77 @@
         <button id="next">下一页</button>
     <script>
 
+
         $(function(){
 
             // 初始化数据
-            var imgs = ['images/jd1.jpg','images/jd2.jpg','images/jd3.jpg']
-            //定时器
-            var timer; 
-            // 动画时长
-            var timer_duration = 2000;
-            var animate_duration = 900;
-            // 几组
-            var per_section = 3; 
-            // 每组几个
-            var per_row = imgs.length;
-            // 初始化索引
-            var index = per_row;
+            var imgs = ['images/jd1.jpg','images/jd2.jpg','images/jd3.jpg','images/jd4.jpg','images/jd5.jpg','images/jd6.jpg']
             // 屏幕宽度
-            var screen_width = $(window).width();
-            // 索引对象
-            var indexPath = {
-                row : 0,
-                section: 0
-            }
-
-
-            // 生成图片数组
-            var first_section = []
-            $.each(imgs, function(k,v){
-                first_section[k] = ((k == imgs.length - 1) ? v : "")
-            })
-            var last_section = []
-            $.each(imgs, function(k,v){
-                last_section[k] = ((k == 0) ? v : "")
-            })
-            var imgs_array = [];
-            imgs_array = imgs_array.concat(first_section).concat(imgs).concat(last_section);
+            var screen_width = 500;
+            var height = 200;
             
+            // 生成图片数组
+            var imgs_array = SMKCycleUtil.getArray(imgs);
+            console.log(imgs_array);
             $.each(imgs_array, function(k,v){
                 $('#canvas').append('<a href=""><img src="'+ v +'" alt=""></a>')
             })
 
             // 绑定样式
-            $('#box').css({"width" : screen_width + 'px', "height" : '454px','margin': '50px auto 0', 'position': 'relative', 'overflow':'hidden'})
-            $('#canvas').css({"width" : screen_width * per_row * per_section + 'px', "height" : '454px','position': 'absolute', 'left': '0', 'top': '0'})
-            $('#canvas a').css({"width" : screen_width + 'px', "height" : '454px','float': 'left'})
-            $('#canvas img').css({"width" : screen_width + 'px', "height" : '454px'})
+            $('#box').css({"width" : screen_width + 'px', 
+            "height" : height + 'px',
+            'margin': '50px auto 0', 
+            'position': 'relative',
+            'overflow':'hidden'})
 
-    
-            // 初始定位 第一组 第一个
-            indexPath.section = Math.floor(per_section / 2);
-            indexPath.row = 0;
-            var num = indexPath.section * per_row + indexPath.row;
-            $('#canvas').animate({left: -screen_width * num + 'px'}, 0);
+            $('#canvas').css({"width" : screen_width * imgs.
+            length * 3 + 'px', "height" : height + 'px',
+            'position': 'absolute', 'left': '0', 'top': '0'})
 
-            // 开始动画轮播
-            start_cycle();
-        
-            function start_cycle(){
-           
-                timer = setInterval(function(){
-                    next_page();
-                },timer_duration);
-            }
-            
+            $('#canvas a').css({"width" : screen_width + 'px', "height" : height + 'px','float': 'left'})
+            $('#canvas img').css({"width" : screen_width + 'px', "height" : height + 'px'})
+
+            // 初始化
+            var cycle = SMKCycle.init($('#canvas'), 2000, 900, imgs.length, screen_width);
+            cycle.startCycle(function (index) {
+                changeLi(index);
+            });
+
             // 绑定事件
             $("img").bind({
                 click:function(){},
-                mouseover:function(){clearInterval(timer); timer=null;},  
-                mouseout:function(){start_cycle();}  
+                mouseover:function(){
+                    cycle.clearTimer();
+                },  
+                mouseout:function(){
+                    cycle.startCycle();
+                }  
             });
+            $("li").bind({
+                click:function(){
+                    cycle.setPage($("li").index(this),function(index){
+                        console.log(index);
+                        changeLi(index);
+                    });
+                },
+                mouseover:function(){cycle.clearTimer();},  
+                mouseout:function(){cycle.startCycle();}  
+            });
+
             $('#pre').click(function(){
-                pre_page();
+                cycle.prePage(function (index) {
+                    changeLi(index);
+                });
             })
             $('#next').click(function(){
-                next_page();
+                cycle.nextPage(function (index) {
+                    changeLi(index);
+                });
             })
-        
-            
-            // 上一页
-            function pre_page() {
-                clearInterval(timer);
-                timer = null;
-                // 重置位置
-                reset_page();
-                // 下一个需要展示的位置
-                // 上一次   第一组 1  第一个 0
-                // 下一次   第0组  0  第2个 2
-                var nextItem = indexPath.row - 1;
-                var nextSection = indexPath.section;
-                if (nextItem < 0 ) {
-                    nextItem = per_row - 1;
-                    nextSection--;
-                }
-                var next_num = nextSection * per_row + nextItem;
-                $('#canvas').stop().animate({left: -screen_width * next_num  + 'px'}, animate_duration);
-                    $('li').removeClass();
-                    $('li').eq(nextItem).addClass('on');
-                    start_cycle();
-                    indexPath.row --;
-                    if (indexPath.row < 0 ) {
-                        indexPath.row = per_row - 1;
-                    }
-                    indexPath.row %= per_row;
-            }
 
-            // 下一页
-            function next_page(){
-                clearInterval(timer); 
-                timer = null;  
-                // 重置位置
-                reset_page();
-
-                // 下一个需要展示的位置
-                var nextItem = indexPath.row + 1;
-                var nextSection = indexPath.section;
-                if (nextItem == per_row) {
-                    nextItem = 0;
-                    nextSection++;
-                }
-                var next_num = nextSection * per_row + nextItem;
-                $('#canvas').stop().animate({left: -screen_width * next_num  + 'px'}, animate_duration);
-                    $('li').removeClass();
-                    $('li').eq(nextItem).addClass('on');
-                    start_cycle();
-                    indexPath.row ++;
-                    indexPath.row %= per_row;
-    
-            }
-
-            // 重置位置
-            function reset_page() {
-                // 重置位置
-                var row = indexPath.row;
-                var section = Math.floor(per_section / 2)
-                var num = section * per_row + row;
-                $('#canvas').stop().animate({left: -screen_width * num + 'px'}, 0);
+            function changeLi(index) {
+                $('li').removeClass();
+                $('li').eq(index).addClass('on');
             }
 
      })
